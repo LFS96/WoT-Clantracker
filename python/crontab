@@ -1,0 +1,2 @@
+0 4 * * 1-6 python /task.py 0 >> /logfile.log 2>&1
+0 3 * * 0 python /task.py 1 >> /logfile.log 2>&1
