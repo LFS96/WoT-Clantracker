@@ -1,0 +1,58 @@
+version: "3" #This is the docker-compose version, NOT the projektversion
+services:
+  web:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        branch: main
+    ports:
+      - "127.0.0.1:1080:80"  # nginx reverse Proxy
+      - "127.0.0.1:1443:443" # nginx reverse Proxy
+      # - "127.0.0.1:80:80"    # standalone
+      # - "127.0.0.1:443:443"  # standalone
+    env_file: .env
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - ./app/src:/var/www/html/src
+      - ./app/webroot:/var/www/html/webroot
+      - ./app/templates:/var/www/html/templates
+      - ./app/logs:/var/www/html/logs
+      - ./app/tests:/var/www/html/tests
+      - ./app/config:/var/www/html/config
+  mysql:
+    image: "mariadb"
+    restart: always
+    volumes:
+      - ./data/db:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    env_file: .env
+    networks:
+      - backend
+  cron:
+    build:
+      context: ./
+      dockerfile: DockerfilePython
+      args:
+        branch: main
+    env_file: .env
+    restart: always
+    networks:
+      - backend
+    volumes:
+      - ./python/task.py:/task.py
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    restart: always
+    ports:
+      - "127.0.0.1:8080:80"
+    environment:
+      PMA_HOST: mysql
+    networks:
+        - backend
+networks:
+  backend:
+    driver: bridge
