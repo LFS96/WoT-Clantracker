@@ -16,7 +16,7 @@ use Cake\ORM\Entity;
  *
  * @property \App\Model\Entity\History[] $history
  * @property \App\Model\Entity\Lang[] $langs
- * @property \App\Model\Entity\User[] $users
+ * @property \App\Model\Entity\Player[] $players
  */
 class Clan extends Entity
 {

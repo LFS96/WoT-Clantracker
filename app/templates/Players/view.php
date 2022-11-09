@@ -1,8 +1,12 @@
 <?php
 /**
- * @var \App\View\AppView $this
- * @var \App\Model\Entity\Player $player
+ * @var AppView $this
+ * @var Player $player
  */
+
+use App\Model\Entity\Player;
+use App\View\AppView;
+
 ?>
 <div class="row">
     <aside class="column">
@@ -17,7 +21,7 @@
     <div class="column-responsive column-80">
         <div class="players view content">
             <h3><?= h($player->id) ?></h3>
-            <table>
+            <table class="table table-sm table-striped">
                 <tr>
                     <th><?= __('Nickname') ?></th>
                     <td><?= h($player->nickname) ?></td>
@@ -32,36 +36,32 @@
                 </tr>
                 <tr>
                     <th><?= __('Quit') ?></th>
-                    <td><?= h($player->quit) ?></td>
+                    <td><?= h($player->quit?->format("d.m.Y H:i:s")) ?></td>
                 </tr>
                 <tr>
                     <th><?= __('LastBattle') ?></th>
-                    <td><?= h($player->lastBattle) ?></td>
+                    <td><?= h($player->lastBattle->format("d.m.Y H:i:s")) ?></td>
                 </tr>
             </table>
             <div class="related">
                 <h4><?= __('Related Histories') ?></h4>
                 <?php if (!empty($player->histories)) : ?>
                 <div class="table-responsive">
-                    <table>
+                    <table class="table table-sm table-striped">
                         <tr>
-                            <th><?= __('Id') ?></th>
-                            <th><?= __('Player Id') ?></th>
-                            <th><?= __('Clan Id') ?></th>
+                            <th><?= __('Clan') ?></th>
                             <th><?= __('Joined') ?></th>
-                            <th class="actions"><?= __('Actions') ?></th>
+                            <th><?= __("lang") ?></th>
+
                         </tr>
                         <?php foreach ($player->histories as $histories) : ?>
                         <tr>
-                            <td><?= h($histories->id) ?></td>
-                            <td><?= h($histories->player_id) ?></td>
-                            <td><?= h($histories->clan_id) ?></td>
-                            <td><?= h($histories->joined) ?></td>
-                            <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'Histories', 'action' => 'view', $histories->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'Histories', 'action' => 'edit', $histories->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Histories', 'action' => 'delete', $histories->id], ['confirm' => __('Are you sure you want to delete # {0}?', $histories->id)]) ?>
-                            </td>
+
+                            <td><?= $this->Html->link("[".$histories->clan->tag."]",['controller' => 'Clans', 'action' => 'view', $histories->clan->id])." ".h($histories->clan->name)?></td>
+                            <td><?= h($histories->joined->format("d.m.Y H:i:s")) ?></td>
+
+                            <td> <span class="flag-icon" data-flag="<?= $histories?->clan?->lang?->iso2; ?>"></span> </td>
+
                         </tr>
                         <?php endforeach; ?>
                     </table>

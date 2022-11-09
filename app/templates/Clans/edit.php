@@ -25,7 +25,7 @@
                     echo $this->Form->control('tag');
                     echo $this->Form->control('name');
                     echo $this->Form->control('description');
-                    echo $this->Form->control('lang_id');
+                    echo $this->Form->control('lang_id', ['options' => $langs, 'empty' => true]);
                 ?>
             </fieldset>
             <?= $this->Form->button(__('Submit')) ?>

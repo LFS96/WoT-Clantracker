@@ -19,13 +19,10 @@
 
     <div class="column-responsive column-80">
         <div class="clans view content">
-            <h3><?= h($clan->name) ?></h3>
+            <h3><span class="flag-icon" data-flag="<?= $clan?->lang?->iso2; ?>"></span> <?= h($clan->name) ?></h3>
 
-            <h4>Erkannte sprache:</h4>
-            <pre>
-                <?php print_r($lang) ?>
-            </pre>
-            <table>
+
+            <table class="table table-sm table-striped">
                 <tr>
                     <th><?= __('Tag') ?></th>
                     <td><?= h($clan->tag) ?></td>
@@ -50,30 +47,22 @@
                 </blockquote>
             </div>
             <div class="related">
-                <h4><?= __('Related Users') ?></h4>
-                <?php if (!empty($clan->users)) : ?>
+                <h4><?= __('Related Players') ?></h4>
+                <?php if (!empty($clan->players)) : ?>
                 <div class="table-responsive">
-                    <table>
+                    <table class="table table-sm table-striped">
                         <tr>
                             <th><?= __('Id') ?></th>
                             <th><?= __('Nickname') ?></th>
-                            <th><?= __('Clan Id') ?></th>
-                            <th><?= __('Quit') ?></th>
+
+
                             <th><?= __('LastBattle') ?></th>
-                            <th class="actions"><?= __('Actions') ?></th>
                         </tr>
-                        <?php foreach ($clan->users as $users) : ?>
+                        <?php foreach ($clan->players as $users) : ?>
                         <tr>
-                            <td><?= h($users->id) ?></td>
-                            <td><?= h($users->nickname) ?></td>
-                            <td><?= h($users->clan_id) ?></td>
-                            <td><?= h($users->quit) ?></td>
-                            <td><?= h($users->lastBattle) ?></td>
-                            <td class="actions">
-                                <?= $this->Html->link(__('View'), ['controller' => 'Users', 'action' => 'view', $users->id]) ?>
-                                <?= $this->Html->link(__('Edit'), ['controller' => 'Users', 'action' => 'edit', $users->id]) ?>
-                                <?= $this->Form->postLink(__('Delete'), ['controller' => 'Users', 'action' => 'delete', $users->id], ['confirm' => __('Are you sure you want to delete # {0}?', $users->id)]) ?>
-                            </td>
+                            <td><?= $this->Html->link($users->id, ['controller' => 'Players', 'action' => 'view', $users->id]) ?></td>
+                            <td><?= $this->Html->link($users->nickname, "https://wot-life.com/eu/player/$users->nickname/") ?></td>
+                            <td><?= h($users->lastBattle->format("d.m.Y H:i:s")) ?></td>
                         </tr>
                         <?php endforeach; ?>
                     </table>

@@ -5,6 +5,7 @@ namespace App\Controller;
 
 use App\Logic\Config\WgApi;
 use App\Logic\Helper\Speach2Lang;
+use Cake\Core\Configure;
 use LanguageDetector\LanguageDetector;
 
 /**
@@ -27,6 +28,27 @@ class ClansController extends AppController
         $this->set(compact('clans'));
     }
 
+    public function homepage(){
+
+    }
+
+
+ public function playersWithoutClans(){
+
+        $lang = Configure::read("wot_lang");
+
+        $connetion = \Cake\Datasource\ConnectionManager::get('default');
+        $query = $connetion->execute('SELECT p.id as Spieler_ID, p.nickname as Nickname, date(p.quit) as Austritt, date(p.lastBattle) as LetztesGefecht,
+       (SELECT  tag FROM histories INNER JOIN clans c on histories.clan_id = c.id WHERE player_id = p.id ORDER BY joined desc limit 1) as LetzerClan,
+       (SELECT  GROUP_CONCAT(DISTINCT lang_id) FROM histories INNER JOIN clans c on histories.clan_id = c.id WHERE player_id = p.id  ORDER BY joined ) as Sprachen
+        FROM players p
+        WHERE p.clan_id is null AND p.lastBattle > curdate() - INTERVAL 30 DAY
+        HAVING Sprachen LIKE ?
+        ORDER BY date(p.quit) desc;',['%'.$lang."%"])->fetchAll('assoc');
+
+        $this->set(compact('query'));
+ }
+
 
 
 
@@ -41,7 +63,7 @@ class ClansController extends AppController
     public function view($id = null)
     {
         $clan = $this->Clans->get($id, [
-            'contain' => ['Histories', 'Users'],
+            'contain' => ['Histories', 'Players', "Langs"],
         ]);
 
         $detector = new LanguageDetector();
@@ -94,7 +116,8 @@ class ClansController extends AppController
             }
             $this->Flash->error(__('The clan could not be saved. Please, try again.'));
         }
-        $this->set(compact('clan'));
+        $langs = $this->Clans->Langs->find('list')->all();
+        $this->set(compact('clan', "langs"));
     }
 
     /**

@@ -102,7 +102,7 @@ class WgPlayers
         return (new WgPlayers)->importClans($Clans, $messages);
     }
 
-    private function importClans($Clans, $messages = []){
+    public function importClans($Clans, $messages = []){
         $connection = ConnectionManager::get('default');
         $api = WgApi::getWG_API();
         $listen = array_chunk($Clans, 100);

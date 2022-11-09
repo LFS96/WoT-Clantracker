@@ -90,6 +90,6 @@ return [
      */
     "outputFormat" => env("OUTPUT_FORMAT","html"),
     "wot_api_key" => env("WOT_API_KEY"),
-    "wot_lang" => env("WOT_LANGUAGE","de"),
+    "wot_lang" => env("WOT_LANGUAGE","DEU"),
 ];
 

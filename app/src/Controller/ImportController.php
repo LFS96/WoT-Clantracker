@@ -70,7 +70,7 @@ class ImportController extends AppController
         }
 
         // recognize clans language
-        $urls[] = Router::url(['controller' => 'import', 'action' => 'performLangAnalysis'], true);
+        $urls[] = Router::url(['controller' => 'import', 'action' => 'performLangAnalysis', $full?1:0], true);
 
         //debug($urls);
         $this->set('urls', $urls);

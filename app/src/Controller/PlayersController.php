@@ -36,7 +36,7 @@ class PlayersController extends AppController
     public function view($id = null)
     {
         $player = $this->Players->get($id, [
-            'contain' => ['Clans', 'Histories'],
+            'contain' => ['Clans', 'Histories', "Histories.Clans", "Histories.Clans.Langs"],
         ]);
 
         $this->set(compact('player'));

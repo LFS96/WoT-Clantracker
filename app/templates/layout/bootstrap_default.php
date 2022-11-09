@@ -77,12 +77,24 @@ if (isset($container)) {
     <?= $this->Html->script('https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js' ) ?>
     <?= $this->Html->script('https://cdn.jsdelivr.net/npm/chart.js' ) ?>
 
+
+
+    <?= $this->Html->script('https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js' ) ?>
+    <?= $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js' ) ?>
+    <?= $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js' ) ?>
+    <?= $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js' ) ?>
+    <?= $this->Html->script('https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js' ) ?>
+    <?= $this->Html->script('https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js' ) ?>
+
+
+
+
     <?= $this->fetch('css'); ?>
     <?= $this->fetch('js'); ?>
 <body>
 <nav class="navbar navbar-dark bg-dark navbar-expand-md">
     <div class="container">
-        <?= $this->Html->link("Clan Interface", ['controller' => 'CLans', 'action' => 'add', 'home'], ["class" => "navbar-brand"]) ?>
+        <?= $this->Html->link("Clan Tracker", "/", ["class" => "navbar-brand"]) ?>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
                 aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -90,7 +102,7 @@ if (isset($container)) {
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <?= $this->Html->link("Auszeit nehmen", ['controller' => 'Inactives', 'action' => 'add', 'home'], ["class" => "nav-link"]) ?>
+                        <?//= $this->Html->link("Auszeit nehmen", ['controller' => 'Inactives', 'action' => 'add', 'home'], ["class" => "nav-link"]) ?>
                 </li>
             </ul>
         </div>
@@ -140,6 +152,77 @@ if (Configure::read('footer.enable') === true): ?>
 <script>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
+
+        $(".flag-icon").each(function () {
+            if(getOS() !== "Windows" || getBrowser() === "firefox") {
+                $(this).text(emoji($(this).data("flag")));
+            }else{
+                $(this).html("<img src='/img/flags/4x3/"+$(this).data("flag").toLowerCase()+".svg'>");
+
+            }
+        });
+
+        function getBrowser() {
+            let userAgent = navigator.userAgent;
+            let browserName;
+
+            if (userAgent.match(/chrome|chromium|crios/i)) {
+                browserName = "chrome";
+            } else if (userAgent.match(/firefox|fxios/i)) {
+                browserName = "firefox";
+            } else if (userAgent.match(/safari/i)) {
+                browserName = "safari";
+            } else if (userAgent.match(/opr\//i)) {
+                browserName = "opera";
+            } else if (userAgent.match(/edg/i)) {
+                browserName = "edge";
+            } else {
+                browserName = "No browser detection";
+            }
+            return browserName;
+        }
+
+        function getOS() {
+            var userAgent = window.navigator.userAgent,
+                platform = window.navigator?.userAgentData?.platform ?? window.navigator.platform,
+                macosPlatforms = ['Macintosh', 'MacIntel', 'MacPPC', 'Mac68K'],
+                windowsPlatforms = ['Win32', 'Win64', 'Windows', 'WinCE'],
+                iosPlatforms = ['iPhone', 'iPad', 'iPod'],
+                os = null;
+
+            if (macosPlatforms.indexOf(platform) !== -1) {
+                os = 'Mac OS';
+            } else if (iosPlatforms.indexOf(platform) !== -1) {
+                os = 'iOS';
+            } else if (windowsPlatforms.indexOf(platform) !== -1) {
+                os = 'Windows';
+            } else if (/Android/.test(userAgent)) {
+                os = 'Android';
+            } else if (!os && /Linux/.test(platform)) {
+                os = 'Linux';
+            }
+
+            return os;
+        }
+
+        function emoji(country) {
+
+            const offset = 127397;
+            const A = 65;
+            const Z = 90;
+
+            const f = country.codePointAt(0);
+            const s = country.codePointAt(1);
+
+            if (country.length !== 2 ||  f > Z || f < A || s > Z || s < A)
+            throw new Error('Not an alpha2 country code');
+
+            return String.fromCodePoint(f + offset)
+                + String.fromCodePoint(s + offset);
+        }
+
+
+
     });
 </script>
 </body>

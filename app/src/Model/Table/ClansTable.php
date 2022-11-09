@@ -11,7 +11,7 @@ use Cake\Validation\Validator;
 /**
  * Clans Model
  *
- * @property \App\Model\Table\UsersTable&\Cake\ORM\Association\HasMany $Users
+ * @property \App\Model\Table\PlayersTable&\Cake\ORM\Association\HasMany $Players
  * @property \App\Model\Table\LangsTable&\Cake\ORM\Association\BelongsToMany $Langs
  * @property \App\Model\Table\HistoriesTable&\Cake\ORM\Association\HasMany $Histories
  *
@@ -53,7 +53,7 @@ class ClansTable extends Table
         $this->hasMany('Histories', [
             'foreignKey' => 'clan_id',
         ]);
-        $this->hasMany('Users', [
+        $this->hasMany('Players', [
             'foreignKey' => 'clan_id',
         ]);
     }
