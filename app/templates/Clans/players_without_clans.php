@@ -15,7 +15,7 @@
         <th><?= __('Austritt') ?></th>
         <th><?= __('LetztesGefecht') ?></th>
         <th><?= __('LetzerClan') ?></th>
-        <th><?= __('Sprachen') ?></th>
+        <th><?= __("TOMATO_GG")?></th>
     </tr>
     </thead>
     <tbody>
@@ -26,11 +26,15 @@
             <td><?= h($row['Austritt']) ?></td>
             <td><?= h($row['LetztesGefecht']) ?></td>
             <td><?= $this->Html->link($row['LetzerClan'], ['controller' => 'Clans', 'action' => 'view', $row['LetzerClan']]) ?></td>
-            <td><?= h($row['Sprachen']) ?></td>
+            <td><span class="tomatoGG" data-player="<?= $row['Spieler_ID'] ?>"></span> </td>
         </tr>
     <?php endforeach; ?>
     </tbody>
 </table>
+<br />
+<br />
+<center>We thank <?= $this->Html->link("TomatoGG","https://www.tomato.gg/") ?> for the allowance to use their API for WN8 an 30 days Battle Activity.</center>
+
 <script>
     $(document).ready(function() {
         $('table').DataTable( {
@@ -38,7 +42,8 @@
             buttons: [
                 'copy', 'csv', 'excel', 'pdf', 'print'
             ],
-            "order": [[ 2, "desc" ]]
+            "order": [[ 2, "desc" ]],
+            "pageLength": 5000,
         } );
     } );
 </script>

@@ -60,7 +60,7 @@ use App\View\AppView;
                             <td><?= $this->Html->link("[".$histories->clan->tag."]",['controller' => 'Clans', 'action' => 'view', $histories->clan->id])." ".h($histories->clan->name)?></td>
                             <td><?= h($histories->joined->format("d.m.Y H:i:s")) ?></td>
 
-                            <td> <span class="flag-icon" data-flag="<?= $histories?->clan?->lang?->iso2; ?>"></span> </td>
+                            <td><?php if($histories?->clan?->lang?->iso2){ ?> <span class="flag-icon" data-flag="<?= $histories?->clan?->lang?->iso2; ?>"></span> <?= $histories?->clan?->lang?->iso2; ?> <?php }else{echo "<i><small>unknown</small></i>";} ?></td>
 
                         </tr>
                         <?php endforeach; ?>

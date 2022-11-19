@@ -46,7 +46,5 @@ class ClanLangHelper
 
         }
         //  $this->set(compact('good', 'bad'));
-
-
     }
 }

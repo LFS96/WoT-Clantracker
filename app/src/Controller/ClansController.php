@@ -38,13 +38,19 @@ class ClansController extends AppController
         $lang = Configure::read("wot_lang");
 
         $connetion = \Cake\Datasource\ConnectionManager::get('default');
-        $query = $connetion->execute('SELECT p.id as Spieler_ID, p.nickname as Nickname, date(p.quit) as Austritt, date(p.lastBattle) as LetztesGefecht,
-       (SELECT  tag FROM histories INNER JOIN clans c on histories.clan_id = c.id WHERE player_id = p.id ORDER BY joined desc limit 1) as LetzerClan,
-       (SELECT  GROUP_CONCAT(DISTINCT lang_id) FROM histories INNER JOIN clans c on histories.clan_id = c.id WHERE player_id = p.id  ORDER BY joined ) as Sprachen
+        $query = $connetion->execute('
+        SELECT
+            p.id as Spieler_ID,
+            p.nickname as Nickname,
+            date(p.quit) as Austritt,
+            date(p.lastBattle) as LetztesGefecht,
+            (SELECT  tag FROM histories INNER JOIN clans c on histories.clan_id = c.id WHERE player_id = p.id ORDER BY joined desc limit 1) as LetzerClan
         FROM players p
-        WHERE p.clan_id is null AND p.lastBattle > curdate() - INTERVAL 30 DAY
-        HAVING Sprachen LIKE ?
-        ORDER BY date(p.quit) desc;',['%'.$lang."%"])->fetchAll('assoc');
+        INNER JOIN histories h on p.id = h.player_id
+        INNER JOIN clans c on h.clan_id = c.id
+        WHERE p.clan_id is null AND p.lastBattle > curdate() - INTERVAL 15 DAY AND c.lang_id = ?
+        GROUP BY p.id
+        ',[$lang])->fetchAll('assoc');
 
         $this->set(compact('query'));
  }

@@ -62,29 +62,27 @@ if (isset($container)) {
     <title><?= $this->fetch('title') ?></title>
     <?= $this->fetch('meta') ?>
 
-    <?= $this->Html->css('https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css' ) ?>
-    <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css') ?>
-    <?= $this->Html->css('https://cdn.datatables.net/1.10.23/css/dataTables.bootstrap4.min.css' ) ?>
-
-
-    <?= $this->Html->css('https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css' ) ?>
-
+    <?= $this->Html->css('all.min.css' ) ?><!-- Font Awesome 6.2.0 -->
+    <?= $this->Html->css('bootstrap.min.css') ?><!-- Bootstrap 5.2.2 -->
+    <?= $this->Html->css('dataTables.bootstrap4.min.css' ) ?>
+    <?= $this->Html->css('bootstrap-icons.css' ) ?>
     <?= $this->Html->css('default' ) ?>
 
-    <?= $this->Html->script('https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js') ?>
-    <?= $this->Html->script('https://code.jquery.com/jquery-3.6.1.min.js') ?>
-    <?= $this->Html->script('https://cdn.datatables.net/1.10.24/js/jquery.dataTables.min.js' ) ?>
-    <?= $this->Html->script('https://cdn.datatables.net/1.10.24/js/dataTables.bootstrap4.min.js' ) ?>
-    <?= $this->Html->script('https://cdn.jsdelivr.net/npm/chart.js' ) ?>
+    <?= $this->Html->script('bootstrap.bundle.min.js') ?>
+    <?= $this->Html->script('jquery-3.6.1.min.js') ?>
+    <?= $this->Html->script('jquery.dataTables.min.js' ) ?>
+    <?= $this->Html->script('dataTables.bootstrap4.min.js' ) ?>
+    <?= $this->Html->script('chart.js' ) ?>
 
 
 
-    <?= $this->Html->script('https://cdn.datatables.net/buttons/2.2.3/js/dataTables.buttons.min.js' ) ?>
-    <?= $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/jszip/3.1.3/jszip.min.js' ) ?>
-    <?= $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/pdfmake.min.js' ) ?>
-    <?= $this->Html->script('https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.1.53/vfs_fonts.js' ) ?>
-    <?= $this->Html->script('https://cdn.datatables.net/buttons/2.2.3/js/buttons.html5.min.js' ) ?>
-    <?= $this->Html->script('https://cdn.datatables.net/buttons/2.2.3/js/buttons.print.min.js' ) ?>
+    <!-- DataTables Excel Export -->
+    <?= $this->Html->script('dataTables.buttons.min.js' ) ?>
+    <?= $this->Html->script('jszip.min.js' ) ?>
+    <?= $this->Html->script('pdfmake.min.js' ) ?>
+    <?= $this->Html->script('vfs_fonts.js' ) ?>
+    <?= $this->Html->script('buttons.html5.min.js' ) ?>
+    <?= $this->Html->script('buttons.print.min.js' ) ?>
 
 
 
@@ -154,13 +152,50 @@ if (Configure::read('footer.enable') === true): ?>
         $('[data-toggle="tooltip"]').tooltip();
 
         $(".flag-icon").each(function () {
-            if(getOS() !== "Windows" || getBrowser() === "firefox") {
-                $(this).text(emoji($(this).data("flag")));
-            }else{
-                $(this).html("<img src='/img/flags/4x3/"+$(this).data("flag").toLowerCase()+".svg'>");
+            try {
+                if (getOS() !== "Windows" || getBrowser() === "firefox") {
+                    $(this).text(emoji($(this).data("flag")));
+                } else {
+                    $(this).html("<img src='/img/flags/4x3/" + $(this).data("flag").toLowerCase() + ".svg'>");
 
+                }
+            }catch (e) {
+                console.log(e);
             }
         });
+
+        $(".tomatoGG").each(function (){
+            try{
+                let playerId = $(this).data("player");
+                let url = "https://tomatobackend.herokuapp.com/api/player/eu/" + playerId +"?cache=true" ;
+                $.getJSON(url, function (data) {
+                    if(data != null) {
+                        printTomatoGG(data)
+                    }else{
+                        let url = "https://tomatobackend.herokuapp.com/api/player/eu/" + playerId ;
+                        $.getJSON(url, function (data) {
+                            if (data != null) {
+                                printTomatoGG(data)
+                            } else {
+
+                            }
+                        });
+                    }
+                });
+
+
+            }catch (e) {
+                $(this).html("N/A");
+            }
+
+        });
+        function printTomatoGG(data){
+            let wn8 = data.overallStats.overallWN8;
+            let battles = data.overallStats.battles;
+            let battles30d = data.recents.recent30days.battles;
+            let element = ".tomatoGG[data-player='" + data.summary.account_id;
+            $(element).html(wn8 + " / " + battles30d + " / " + battles);
+        }
 
         function getBrowser() {
             let userAgent = navigator.userAgent;
