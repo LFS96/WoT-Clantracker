@@ -1,6 +1,7 @@
 version: "3" #This is the docker-compose version, NOT the projektversion
 services:
   web:
+    image: lfs96/wot-clantracker-web
     build:
       context: ./
       dockerfile: Dockerfile

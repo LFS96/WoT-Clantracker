@@ -2,6 +2,11 @@ version: "3" #This is the docker-compose version, NOT the projektversion
 services:
   web:
     image: lfs96/wot-clantracker-web
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      args:
+        branch: main
     ports:
       - "127.0.0.1:1080:80"  # nginx reverse Proxy
       - "127.0.0.1:1443:443" # nginx reverse Proxy
@@ -15,29 +20,20 @@ services:
     volumes:
       - ./data/db:/var/lib/mysql
     ports:
-      - "127.0.0.1::3306"
+      - "3306:3306"
     env_file: .env
     networks:
       - backend
+  # NO CRONJOB IN PRODUCTION
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     restart: always
     ports:
       - "127.0.0.1:8080:80"
     environment:
-        PMA_HOST: mysql
+      PMA_HOST: mysql
     networks:
-      - backend
-  cron:
-    build:
-      context: ./
-      dockerfile: DockerfilePython
-      args:
-        branch: main
-    env_file: .env
-    restart: always
-    networks:
-      - backend
+        - backend
 networks:
   backend:
     driver: bridge

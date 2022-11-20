@@ -151,6 +151,25 @@ if (Configure::read('footer.enable') === true): ?>
     $(document).ready(function () {
         $('[data-toggle="tooltip"]').tooltip();
 
+        var table = null;
+        $("#buildDatatable").click(function (){
+            $(this).hide();
+            table = $('table').DataTable( {
+                dom: 'Bfrtip',
+                buttons: [
+                    'copy', 'csv', 'excel', 'pdf', 'print'
+                ],
+                "order": [[ 2, "desc" ]],
+                "pageLength": 5000,
+            } );
+        });
+
+        $("#destroyDatatable").click(function (){
+            table.destroy();
+        });
+
+
+
         $(".flag-icon").each(function () {
             try {
                 if (getOS() !== "Windows" || getBrowser() === "firefox") {
@@ -182,13 +201,14 @@ if (Configure::read('footer.enable') === true): ?>
                         });
                     }
                 });
-
-
             }catch (e) {
                 $(this).html("N/A");
             }
 
         });
+
+
+
         function printTomatoGG(data){
             let wn8 = data.overallStats.overallWN8;
             let battles = data.overallStats.battles;
